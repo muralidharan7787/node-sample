@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
-const userRoutes = require('./routes/users');
+// const userRoutes = require('./routes/users');
 
 const app = express();
 const PORT = 3000;
@@ -17,23 +17,32 @@ app.use('/videos', express.static(path.join(__dirname, 'uploads')));
 
 // Multer setup for storing video uploads
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Save in uploads/ folder
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // your folder
   },
-  filename: function (req, file, cb) {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName);
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // unique filename
   }
 });
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 100 * 1024 * 1024 }, // Limit: 100MB
+  limits: { fileSize: 10 * 1024 * 1024 * 1024 }, // 100MB
   fileFilter: (req, file, cb) => {
-    const filetypes = /mp4|mov|avi|mkv/;
-    const mimetype = filetypes.test(file.mimetype);
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    if (mimetype && extname) return cb(null, true);
+    const allowedExt = /mp4|mov|avi|mkv/;
+    const extname = allowedExt.test(path.extname(file.originalname).toLowerCase());
+
+    const allowedMimeTypes = [
+      'video/mp4',
+      'video/quicktime',     // .mov
+      'video/x-msvideo',     // .avi
+      'video/x-matroska'     // .mkv
+    ];
+    const mimetype = allowedMimeTypes.includes(file.mimetype);
+
+    if (extname && mimetype) {
+      return cb(null, true);
+    }
     cb(new Error('Only video files are allowed!'));
   }
 });
@@ -51,7 +60,7 @@ app.post('/upload', upload.single('video'), (req, res) => {
 });
 
 // Existing user routes
-app.use('/users', userRoutes);
+// app.use('/users', userRoutes);
 
 // Start server
 app.listen(PORT, () => {
