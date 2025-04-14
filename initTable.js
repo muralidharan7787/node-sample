@@ -3,18 +3,18 @@ const pool = require('./db');
 
 const createTableAndInsert = async () => {
   try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(100),
-        email VARCHAR(100)
-      );
-    `);
+    // await pool.query(`
+    //   CREATE TABLE IF NOT EXISTS users (
+    //     id SERIAL PRIMARY KEY,
+    //     name VARCHAR(100),
+    //     email VARCHAR(100)
+    //   );
+    // `);
 
     await pool.query(`
       INSERT INTO users (name, email) VALUES
-      ('Alice', 'alice@example.com'),
-      ('Bob', 'bob@example.com');
+      ('muralidharan', 'dkk@example.com'),
+      ('dfd', 'bob@example.com');
     `);
 
     console.log("✅ Table created and data inserted");
