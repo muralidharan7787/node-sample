@@ -60,7 +60,7 @@ app.post('/upload', upload.single('video'), (req, res) => {
 });
 
 // Existing user routes
-// app.use('/users', userRoutes);
+app.use('/users', userRoutes);
 
 // Start server
 app.listen(PORT, () => {
