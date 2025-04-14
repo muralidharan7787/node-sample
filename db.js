@@ -1,16 +1,11 @@
 // db.js
-const mysql = require('mysql');
+const { Pool } = require('pg');
 
-const connection = mysql.createConnection({
-  host: 'mysql.railway.internal',
-  user: 'root',      // your MySQL username
-  password: 'UrvhzRQVwWNocgXuGJZhHowmIllMDEJO',      // your MySQL password
-  database: 'railway' // your database name
+const pool = new Pool({
+  connectionString: 'postgresql://root:kCBuMhyQpnu2uacBpPCwgtDuuTuhN38v@dpg-cvubgchr0fns73fvqj6g-a.oregon-postgres.render.com/test_kl8i',
+  ssl: {
+    rejectUnauthorized: false // required for Render
+  }
 });
 
-connection.connect((err) => {
-  if (err) throw err;
-  console.log('✅ Connected to MySQL DB');
-});
-
-module.exports = connection;
+module.exports = pool;
