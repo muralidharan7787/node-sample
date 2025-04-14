@@ -59,7 +59,7 @@ app.post('/upload', upload.single('video'), (req, res) => {
   });
 });
 
-// Existing user routes
+// Existing user route
 app.use('/users', userRoutes);
 
 // Start server
