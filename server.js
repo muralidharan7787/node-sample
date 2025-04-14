@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 
 // Serve uploaded files statically
 app.use('/videos', express.static(path.join(__dirname, 'uploads')));
+app.use('/videos', express.static('videos'));
 
 // Multer setup for storing video uploads
 const storage = multer.diskStorage({
@@ -59,8 +60,31 @@ app.post('/upload', upload.single('video'), (req, res) => {
   });
 });
 
+
 // Existing user route
 app.use('/users', userRoutes);
+
+app.get('/list-videos', (req, res) => {
+  const videosDir = path.join(__dirname, 'uploads'); // Use 'uploads' since that's your folder
+
+  fs.readdir(videosDir, (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: 'Unable to scan folder' });
+    }
+
+    // Filter only video files
+    const videoFiles = files.filter(file =>
+      /\.(mp4|mov|avi|mkv)$/i.test(file)
+    );
+
+    // Generate full URLs
+    const fileUrls = videoFiles.map(file =>
+      `${req.protocol}://${req.get('host')}/videos/${file}`
+    );
+
+    res.json({ videos: fileUrls });
+  });
+});
 
 // Start server
 app.listen(PORT, () => {
