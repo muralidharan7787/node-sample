@@ -65,7 +65,7 @@ app.post('/upload', upload.single('video'), (req, res) => {
 app.use('/users', userRoutes);
 
 app.get('/list-videos', (req, res) => {
-  const videosDir = path.join(__dirname, 'uploads'); // Use 'uploads' since that's your folder
+  const videosDir = path.join(__dirname, 'videos'); // Use 'uploads' since that's your folder
 
   fs.readdir(videosDir, (err, files) => {
     if (err) {
